@@ -1,7 +1,5 @@
-from ast import arg
 import numpy as np
 import matplotlib.pyplot as plt
-from sqlalchemy import func
 
 
 class SideException(Exception):
@@ -22,7 +20,7 @@ class NoLinerFunction:
         """Позволяет вызывать экземпляр класса как функцию."""
         return self.f(x)
 
-    def secant_method(self, x0, x1, tolerance=1e-8, max_iterations=50):
+    def secant_method(self, x0, x1, acceptable=1e-8, max_iterations=50):
         """
         Метод секущих для нахождения корня.
         Параметры:
@@ -59,7 +57,7 @@ class NoLinerFunction:
             # Формула метода секущих
             x_next = x1 - f1 * (x1 - x0) / (f1 - f0)
             print(f"Итерация {_+1}: x={x_next:.6f}, f(x)={self.f(x_next):.6f}")
-            if abs(x_next - x1) < tolerance:
+            if abs(x_next - x1) < acceptable:
                 print(f"Сходимость достигнута на итерации {_+1}")
                 return x_next
 
@@ -67,21 +65,7 @@ class NoLinerFunction:
 
         print("Достигнуто максимальное число итераций")
         return x1
-
-    # Построение графика функции
-    # x = np.linspace(-5, 5, 100) # задаём диапазон значений x , 100 точек от -5 до 5# 100 точек от -5 до 5
-    # y = -x**3 + 12 * np.sin(3 * x) - 5 * x   # вычисляем значения y
-    # plt.figure(figsize=(10, 6))
-    # plt.gcf().canvas.manager.set_window_title("Метод секущих") 
-    # plt.plot(x, y, label='$f(x) = -x^3 + 12\\sin(3x) - 5x$', color='red')   # строим график
-    # plt.axhline(y=0, color="k", linestyle="--", alpha=0.3)
-    # plt.xlabel("x") # подписываем ось x
-    # plt.ylabel("f(x)") # подписываем ось y
-    # plt.title("График функции $f(x) = -x^3 + 12 \sin(3x) - 5x$") # добавляем заголовок
-    # plt.grid(True) # добавляем сетку
-    # plt.legend()  
-    # plt.show() 
-
+    
     # Использование
 if __name__ == "__main__":
     func = NoLinerFunction()
@@ -89,3 +73,17 @@ if __name__ == "__main__":
     arg2 = np.double(input("Введите начальное приближение x1: "))
     root = func.secant_method(arg1, arg2)
     print(f"Корень: {root}")
+    
+    # Построение графика функции
+    x = np.linspace(-5, 5, 100) # задаём диапазон значений x , 100 точек от -5 до 5# 100 точек от -5 до 5
+    y = -x**3 + 12 * np.sin(3 * x) - 5 * x   # вычисляем значения y
+    plt.figure(figsize=(10, 6))
+    plt.gcf().canvas.manager.set_window_title("Метод секущих") 
+    plt.plot(x, y, label='$f(x) = -x^3 + 12\\sin(3x) - 5x$', color='red')   # строим график
+    plt.axhline(y=0, color="k", linestyle="--", alpha=0.3)
+    plt.xlabel("x") # подписываем ось x
+    plt.ylabel("f(x)") # подписываем ось y
+    plt.title("График функции $f(x) = -x^3 + 12 \sin(3x) - 5x$") # добавляем заголовок
+    plt.grid(True) # добавляем сетку
+    plt.legend()  
+    plt.show() 
