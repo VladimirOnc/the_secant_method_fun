@@ -6,8 +6,7 @@ from app.NoLinerFunction import SideException
 
 class TestNoLinerFunction:
     
-    @pytest.mark.parametrize(
-        "message, expected_message",
+    @pytest.mark.parametrize("message, expected_message",
         [
             # пустое сообщение строки
             pytest.param(
@@ -47,9 +46,9 @@ class TestNoLinerFunction:
             ),
         ],
     )
-    def test_side_exception_message_representation(self, message, expected_message):
+    def test_side_exception_message(self, message, expected_message):
         exc = SideException(message)
-        # Исключение должно быть экземпляром SideException и базовым типом исключения
+        # Исключение должно быть экземпляром SideException и базовым типом иcключения
         assert isinstance(exc, SideException)
         assert isinstance(exc, Exception)
 
@@ -59,29 +58,24 @@ class TestNoLinerFunction:
         # Представление строки должно соответствовать ожидаемой форме строки
         assert str(exc) == expected_message
 
-    @pytest.mark.parametrize(
-        "message",
+    @pytest.mark.parametrize("message",
         [
             # Сообщения, похожие на ошибку (текстуально имитирующие различные условия ошибки)
-            pytest.param(
-                "division by zero during secant method iteration",
+            pytest.param("division by zero during secant method iteration",
                 id="",
             ),
-            pytest.param(
-                "maximum iterations exceeded in nonlinear solver",
+            pytest.param("maximum iterations exceeded in nonlinear solver",
                 id="",
             ),
-            pytest.param(
-                "function not defined in given interval",
+            pytest.param("function not defined in given interval",
                 id="",
             ),
-            pytest.param(
-                "derivative approximated as zero, cannot proceed",
+            pytest.param("derivative approximated as zero, cannot proceed",
                 id="",
             ),
         ],
     )
-    def test_side_exception_raised_and_caught(self,message):
+    def test_side_exception_raised(self,message):
         with pytest.raises(SideException) as exc_info:
             raise SideException(message)
         assert str(exc_info.value) == message
