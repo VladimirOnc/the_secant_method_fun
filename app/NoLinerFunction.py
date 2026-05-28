@@ -75,15 +75,15 @@ if __name__ == "__main__":
     print(f"Корень: {root}")
     
     # Построение графика функции
-    x = np.linspace(-5, 5, 100) # задаём диапазон значений x , 100 точек от -5 до 5# 100 точек от -5 до 5
-    y = -x**3 + 12 * np.sin(3 * x) - 5 * x   # вычисляем значения y
-    plt.figure(figsize=(10, 6))
-    plt.gcf().canvas.manager.set_window_title("Метод секущих") 
-    plt.plot(x, y, label='$f(x) = -x^3 + 12\\sin(3x) - 5x$', color='red')   # строим график
-    plt.axhline(y=0, color="k", linestyle="--", alpha=0.3)
-    plt.xlabel("x") # подписываем ось x
-    plt.ylabel("f(x)") # подписываем ось y
-    plt.title("График функции $f(x) = -x^3 + 12 \sin(3x) - 5x$") # добавляем заголовок
-    plt.grid(True) # добавляем сетку
-    plt.legend()  
-    plt.show() 
+    # x = np.linspace(-5, 5, 100) # задаём диапазон значений x , 100 точек от -5 до 5# 100 точек от -5 до 5
+    # y = -x**3 + 12 * np.sin(3 * x) - 5 * x   # вычисляем значения y
+    # plt.figure(figsize=(10, 6))
+    # plt.gcf().canvas.manager.set_window_title("Метод секущих") 
+    # plt.plot(x, y, label='$f(x) = -x^3 + 12\\sin(3x) - 5x$', color='red')   # строим график
+    # plt.axhline(y=0, color="k", linestyle="--", alpha=0.3)
+    # plt.xlabel("x") # подписываем ось x
+    # plt.ylabel("f(x)") # подписываем ось y
+    # plt.title("График функции $f(x) = -x^3 + 12 \sin(3x) - 5x$") # добавляем заголовок
+    # plt.grid(True) # добавляем сетку
+    # plt.legend()  
+    # plt.show() 
