@@ -4,7 +4,7 @@ sys.path.append('C:/Users/shama/Desktop/the_secant_method_fun')
 
 from app.NoLinerFunction import SideException
 
-class TestNoLinerFunction:
+class TestSideException:
     
     @pytest.mark.parametrize("message, expected_message",
         [

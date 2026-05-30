@@ -45,9 +45,9 @@ class TestNoLinerFunctionCall:
     @pytest.mark.parametrize(
         "x",
         [
-            pytest.param(0.0, id="happy_zero_call"),
-            pytest.param(2.5, id="happy_positive_call"),
-            pytest.param(-3.3, id="happy_negative_call"),
+            pytest.param(0.0, id=""),
+            pytest.param(2.5, id=""),
+            pytest.param(-3.3, id=""),
         ],
     )
     def test_call_delegates_to_f(self, x: float, monkeypatch: pytest.MonkeyPatch):
@@ -70,13 +70,11 @@ class TestSecantMethodInitialSignChecks:
     @pytest.mark.parametrize(
         "x0, x1, root_at, expected_root",
         [
-            pytest.param(0, 1, "x0", 0, id="edge_root_at_x0"),
-            pytest.param(0, 1, "x1", 1, id="edge_root_at_x1"),
+            pytest.param(0, 1, "x0", 0, id=""),
+            pytest.param(0, 1, "x1", 1, id=""),
         ],
     )
     def test_initial_exact_root_at_x0(self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
-        # Arrange
-
         x0, x1 = 0, 1
         func = NoLinerFunction()
         original_f = func.f
@@ -87,19 +85,13 @@ class TestSecantMethodInitialSignChecks:
 
         monkeypatch.setattr(func, "f", fake_f)
 
-        # Act
-
         root = func.secant_method(x0, x1)
         captured = capsys.readouterr().out
-
-        # Assert
 
         assert math.isclose(root, x0, rel_tol=1e-12, abs_tol=1e-12)
         assert f"x0 является корнем: f({x0}) = 0" in captured
 
     def test_initial_exact_root_at_x0(self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
-        # Arrange
-
         x0, x1 = 0.0, 1.0
         func = NoLinerFunction()
         original_f = func.f
@@ -108,48 +100,33 @@ class TestSecantMethodInitialSignChecks:
             return 0.0 if x == x0 else original_f(x)
 
         monkeypatch.setattr(func, "f", fake_f)
-
-        # Act
-
         root = func.secant_method(x0, x1)
         captured = capsys.readouterr().out
-
-        # Assert
-
         assert math.isclose(root, x0, rel_tol=1e-12, abs_tol=1e-12)
         assert f"x0 является корнем: f({x0}) = 0" in captured
     
-    @pytest.mark.parametrize(
-        "x0, x1, acceptable, max_iterations",
+    @pytest.mark.parametrize("x0, x1, acceptable, max_iterations",
         [
-            pytest.param(-1.0, 1.0, 1e-8, 50, id="happy_standard_convergence"),
-            pytest.param(-5.0, 5.0, 1e-6, 100, id="happy_wider_interval_and_more_iterations"),
-            pytest.param(1.0, 3.0, 1e-5, 50, id="happy_positive_interval"),
+            pytest.param(-1.0, 1.0, 1e-8, 50, id=""),
+            pytest.param(-5.0, 5.0, 1e-6, 100, id=""),
+            pytest.param(1.0, 3.0, 1e-5, 50, id=""),
         ],
     )
     def test_secant_method_converges_to_root(
         self, x0: float, x1: float, acceptable: float, max_iterations: Literal[50] | Literal[100], capsys: pytest.CaptureFixture[str]
     ):
-        # Arrange
 
         func = NoLinerFunction()
-
-        # Act
-
         root = func.secant_method(x0, x1, acceptable=acceptable, max_iterations=max_iterations)
         captured = capsys.readouterr().out
-
-        # Assert
-
         assert isinstance(root, float)
         assert abs(func.f(root)) < 1e-4
         assert "Итерация" in captured
         assert "Сходимость достигнута" in captured or "Достигнуто максимальное число итераций" in captured
 
-    def test_secant_method_hits_max_iterations_without_convergence(
+    def test_secant_method_hits_max_iterations(
         self, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
     ):
-        # Arrange
 
         func = NoLinerFunction()
 
@@ -157,20 +134,12 @@ class TestSecantMethodInitialSignChecks:
             return 1.0
 
         monkeypatch.setattr(func, "f", slow_f)
-
-        # Act
-
         result = func.secant_method(0.0, 1.0, acceptable=1e-20, max_iterations=3)
         captured = capsys.readouterr().out
-
-        # Assert
-
         assert isinstance(result, float)
         assert "Достигнуто максимальное число итераций" in captured
 
     def test_secant_method_division_by_zero_guard(self, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch):
-        # Arrange
-
         func = NoLinerFunction()
         call_count = {"count": 0}
 
@@ -179,14 +148,8 @@ class TestSecantMethodInitialSignChecks:
             return 2.0
 
         monkeypatch.setattr(func, "f", f_with_same_value)
-
-        # Act
-
         result = func.secant_method(0.0, 1.0, acceptable=1e-8, max_iterations=5)
         captured = capsys.readouterr().out
-
-        # Assert
-
         assert "Деление на ноль в методе секущих" in captured
         assert "Достигнуто максимальное число итераций" in captured
         assert isinstance(result, float)
