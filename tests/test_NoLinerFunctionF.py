@@ -75,19 +75,16 @@ class TestSecantMethodInitialSignChecks:
         ],
     )
     def test_initial_exact_root_at_x0(self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
-        x0, x1 = 0, 1
+        x0, x1 = 0.0, 1.0
         func = NoLinerFunction()
         original_f = func.f
 
         def fake_f(x):
             if x == x0:
                 return 0.0 if x == x0 else original_f(x)
-
         monkeypatch.setattr(func, "f", fake_f)
-
         root = func.secant_method(x0, x1)
         captured = capsys.readouterr().out
-
         assert math.isclose(root, x0, rel_tol=1e-12, abs_tol=1e-12)
         assert f"x0 является корнем: f({x0}) = 0" in captured
 
@@ -127,12 +124,9 @@ class TestSecantMethodInitialSignChecks:
     def test_secant_method_hits_max_iterations(
         self, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
     ):
-
         func = NoLinerFunction()
-
         def slow_f(x):
             return 1.0
-
         monkeypatch.setattr(func, "f", slow_f)
         result = func.secant_method(0.0, 1.0, acceptable=1e-20, max_iterations=3)
         captured = capsys.readouterr().out
@@ -142,11 +136,9 @@ class TestSecantMethodInitialSignChecks:
     def test_secant_method_division_by_zero_guard(self, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch):
         func = NoLinerFunction()
         call_count = {"count": 0}
-
         def f_with_same_value(_):
             call_count["count"] += 1
             return 2.0
-
         monkeypatch.setattr(func, "f", f_with_same_value)
         result = func.secant_method(0.0, 1.0, acceptable=1e-8, max_iterations=5)
         captured = capsys.readouterr().out
@@ -161,20 +153,16 @@ class TestSecantMethodOutputAndSideEffects:
         func = NoLinerFunction()
         _ = func.secant_method(-1.0, 0.5, acceptable=1e-3, max_iterations=5)
         captured = capsys.readouterr().out
-
         assert "Начальные приближения:" in captured
         assert "f(x0)=" in captured
         assert "f(x1)=" in captured
         assert "Итерация 1:" in captured or "Сходимость достигнута" in captured
-
     def test_secant_method_return_is_last_x1_on_non_convergence(self, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch):
         func = NoLinerFunction()
         xs = []
-
         def track_x_values(x):
             xs.append(x)
             return x + 1.0
-
         monkeypatch.setattr(func, "f", track_x_values)
         result = func.secant_method(0.0, 2.0, acceptable=1e-20, max_iterations=2)
         captured = capsys.readouterr().out
